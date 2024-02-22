@@ -1,22 +1,24 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EMPTY, Subscription, catchError } from 'rxjs';
 import { ProductService } from '../product.service';
 
 @Component({
   selector: 'pm-product-list',
-  templateUrl: './product-list-alt.component.html'
+  templateUrl: './product-list-alt.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductListAltComponent {
   pageTitle = 'Products';
   errorMessage = '';
-  selectedProductId = 0;
 
-  products$ = this.productService.products$.pipe(
+  products$ = this.productService.productsWithCategory$.pipe(
     catchError(err => {
       this.errorMessage = err;
       return EMPTY;
     })
   );
+
+  selectedProduct$ = this.productService.selectedProduct$;
 
   sub!: Subscription;
 
